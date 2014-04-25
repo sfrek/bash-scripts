@@ -10,14 +10,22 @@ function get_pids(){
 	# if [ $(pgrep -P ${PID}) ] 
 	if [ $(ps h --ppid ${PID} -o pid) ] 
 	then
-		recursive $(ps h --ppid ${PID} -o pid)
+		get_pids $(ps h --ppid ${PID} -o pid)
 		PIDS+=(${PID})
-	elif [ "$(ps -pid ${PID} -o pid)" != "PID" ]
+	elif [ "$(ps --pid ${PID} -o pid)" != "PID" ]
 	then
 		PIDS+=${PID}
 	fi
 }
 
 get_pids 30977
+
+function get_screen_pid(){
+	local PATTERN=$1
+	PAT=$(screen -ls | awk '/'${PATTERN}'/ {print $1}')
+	return ${PAT%.*}
+}
+
+echo $(get_screen_pid jboss_server)
 
 
