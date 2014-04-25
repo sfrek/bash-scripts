@@ -9,6 +9,23 @@
 declare -a PIDS
 RUN_FILE=/tmp/run_file
 
+function techo(){
+	# Color 	Code
+	# Black 	0
+	# Red	 	1
+	# Green 	2
+	# Yellow 	3
+	# Blue 		4
+	# Magenta 	5
+	# Cyan 		6
+	# White 	7
+	local COLOR=${1}
+	shift
+	tput setaf ${COLOR}
+	echo "$@"
+	tput sgr0
+}
+
 function error(){
 	case $1 in
 		1)
@@ -47,6 +64,7 @@ function start(){
 	SCREEN_OPTIONS="-S ${ID} -t ${ID} -m -d"
 	#### ---------- ####
 
+	techo 2 "Starting screen-jboss process"
 	screen ${SCREEN_OPTIONS} ${COMMAND}
 
 	echo "ID=${ID}" > ${RUN_FILE}
@@ -60,7 +78,8 @@ function stop(){
 	
 	source ${RUN_FILE}
 	get_pids ${SCREEM_PID}
-	echo "kill -9 ${PIDS[*]}"
+	techo 1 "Stoping screen-jboss process"
+	kill -9 ${PIDS[*]}
 	[ $? ] && rm ${RUN_FILE}
 
 }
