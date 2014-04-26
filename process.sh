@@ -68,8 +68,10 @@ function start(){
 	screen ${SCREEN_OPTIONS} ${COMMAND}
 
 	echo "ID=${ID}" > ${RUN_FILE}
-	echo "SCREEN=$(screen -ls | awk '/'${ID}'/ {awk $1}')" >> ${RUN_FILE}
-	echo "SCREEM_PID=${SCREEN%.*}" >> ${RUN_FILE}
+	SCREEN=$(screen -ls | awk '/'${ID}'/ {print $1}')
+	echo "SCREEN=${SCREEN}" >> ${RUN_FILE}
+	echo "SCREEN_PID=${SCREEN%.*}" >> ${RUN_FILE}
+	screen -ls
 
 }
 
@@ -77,9 +79,10 @@ function stop(){
 	[ ! -f ${RUN_FILE} ] && error 2
 	
 	source ${RUN_FILE}
-	get_pids ${SCREEM_PID}
-	techo 1 "Stoping screen-jboss process"
+	get_pids ${SCREEN_PID}
+	techo 1 "Stoping screen-jboss process ${SCREEN_PID}"
 	kill -9 ${PIDS[*]}
+	screen -wipe
 	[ $? ] && rm ${RUN_FILE}
 
 }
