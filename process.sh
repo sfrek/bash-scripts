@@ -87,6 +87,21 @@ function stop(){
 
 }
 
+function status(){
+	[ ! -f ${RUN_FILE} ] && error 2
+
+	source ${RUN_FILE}
+	get_pids ${SCREEN_PID}
+	techo 2 "screens UP"
+	screen -ls
+	techo 3 "screen: ${SCREEN}"
+	techo 1 "pids  : ${PIDS[*]}"
+	for PID in ${PIDS[*]}
+	do
+		ps h --pid ${PID}
+	done
+}
+
 ACTION=${1:-stop}
 
 case $ACTION in
@@ -95,6 +110,9 @@ case $ACTION in
 		;;
 	stop)
 		stop
+		;;
+	status)
+		status
 		;;
 esac
 
