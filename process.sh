@@ -88,18 +88,32 @@ function stop(){
 }
 
 function status(){
-	[ ! -f ${RUN_FILE} ] && error 2
-
-	source ${RUN_FILE}
-	get_pids ${SCREEN_PID}
 	techo 2 "screens UP"
 	screen -ls
+	
+	[ ! -f ${RUN_FILE} ] && error 2
+	source ${RUN_FILE}
+	get_pids ${SCREEN_PID}
 	techo 3 "screen: ${SCREEN}"
 	techo 1 "pids  : ${PIDS[*]}"
+	
 	for PID in ${PIDS[*]}
 	do
 		ps h --pid ${PID}
 	done
+}
+
+function flush(){
+	# brute force
+	for SCREEN in $(screen -ls | awk '/jboss_/ {print $1}')
+	do
+		get_pids ${SCREEN%.*}
+		techo 6 "Killing all screens ${PIDS[*]}"
+		kill -9 ${PIDS[*]}
+	done
+	[ $? ] && rm ${RUN_FILE}
+	sleep 5
+	screen -wipe
 }
 
 ACTION=${1:-stop}
@@ -113,6 +127,12 @@ case $ACTION in
 		;;
 	status)
 		status
+		;;
+	flush)
+		flush
+		;;
+	*)
+		usage
 		;;
 esac
 
