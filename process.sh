@@ -124,10 +124,10 @@ Script to start/stop/status JBoss standalone process:
 Usage:
 	./process.sh {start|stop|status|flush|help}
 
-	* start	   :Start JBoss, It start jboss standalone mode into a screen, this screen is deattach automatly.
-	* stop	   :Stop JBoss, It stop jboss, It kill all java process and screen process associate to it.
-	* status   :Show status about screens process, not about JBoss, if you want to see JBoss status you must see the logs.
-	* flush	   :It is a brute force clearer and killer of all screens and jboss, You can use it if the "stop" procedure fail.
+	* start    :Start JBoss, It start jboss standalone mode into a screen, this screen is detach automaticaly.
+	* stop     :Stop JBoss, It stop jboss, It kill all java process and screen process associate to it.
+	* status   :Show status about "screens process", not about JBoss, if you want to see JBoss status you should see the logs.
+	* flush    :It is a brute force cleaner killer of all screens and jboss process, You can use it if the "stop procedure" fail.
 
 JBoss log:
 
